@@ -518,7 +518,8 @@ $(function() {
                     // Workaround a jQuery UI bug which doesn't take scrollTop
                     // into accounting when checking if mouse is near top or
                     // bottom of the sortable
-                    var s = $(this).data('sortable'), sP = s.scrollParent;
+                    var s = $(this).data('sortable'), sP = s.scrollParent,
+                        container, selector, active;
                     if(sP[0] != document && sP[0].tagName != 'HTML') {
                         s.overflowOffset.top = sP.offset().top+sP[0].scrollTop;
                         // Hackish solution to cheat jquery UI so that
@@ -532,10 +533,16 @@ $(function() {
                     }
 
                     targets.removeClass('ui-state-active');
+                    active = window.parent.$(".outlineView.jstree").find(".active");
+                    if(active) {
+                        active.removeClass("active");
+                    }
                     // The highlighted container should always be where the
                     // placeholder is located
-                    ui.placeholder.closest('.nrc-sortable-container')
-                        .addClass('ui-state-active');
+                    container = ui.placeholder.closest('.nrc-sortable-container');
+                    container.addClass('ui-state-active');
+                    selector = "#treenode_" + container.attr("data-uid");
+                    window.parent.$(selector).addClass("active");
                 },
                 over: function(event, ui){
                     trackOffsets('over:    ',ui,$(this).data('sortable'));
@@ -582,9 +589,13 @@ $(function() {
                         node, zones, newParent, newZone,
                         rdx, idx, cid, pid, sid,
                         sibling, children, parent,
-                        role, card;
+                        role, card, active;
 
                     role = $(this).attr('data-role') || '';
+                    active = window.parent.$(".outlineView.jstree").find(".active");
+                    if(active) {
+                        active.removeClass("active");
+                    }
 
                     // Reset masked states on all nodes on the active page
                     unmaskNodes();
