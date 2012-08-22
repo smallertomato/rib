@@ -1543,18 +1543,12 @@ var BWidgetRegistry = {
             rows: {
                 type: "integer",
                 defaultValue: 1,
+                range: "1-100",
                 setPropertyHook: function (node, value, transactionData) {
                     var rows, columns, i, block, map, children, blocks, count,
                         blockIndex, root;
                     rows = node.getProperty("rows");
                     columns = node.getProperty("columns");
-
-                    // FIXME: really this should be enforced in the property
-                    //        pane, or elsewhere; this won't really work
-                    if (value < 1) {
-                        value = 1;
-                    }
-
                     root = node.getDesign();
                     root.suppressEvents(true);
 
@@ -1608,8 +1602,8 @@ var BWidgetRegistry = {
             },
             columns: {
                 type: "integer",
-                options: [ 2, 3, 4, 5 ],
                 defaultValue: 2,
+                range: "2-5",
                 setPropertyHook: function (node, value, transactionData) {
                     var rows, columns, i, block, map, children, blocks, count,
                         index, blockIndex, root;
@@ -2318,6 +2312,23 @@ var BWidget = {
         var schema = BWidget.getPropertySchema(widgetType, property);
         if (schema) {
             return schema.htmlValueMap;
+        }
+        return schema;
+    },
+
+    /**
+     * Gets the range for a given instance property.
+     *
+     * @param {String} widgetType The type of the widget.
+     * @param {String} property The name of the requested property.
+     * @return {String} The range for the given property, or
+     *                  the property instance name if this property has
+     *                  no the attribute.
+     */
+    getPropertyRange: function (widgetType, property) {
+        var schema = BWidget.getPropertySchema(widgetType, property), range;
+        if (schema) {
+            return schema.range;
         }
         return schema;
     },
