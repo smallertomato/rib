@@ -39,6 +39,11 @@
                                 * 0.4);
                 el.height(newHeight);
             });
+            this.element.delegate('*', 'focus', function(e){
+                window.lastFocusElement = window.focusElement;
+                window.focusElement = this;
+                e.stopPropagation();
+            });
 
             return this;
         },
